@@ -21,9 +21,18 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start:dev": "REACT_APP_ENVIRONMENT=development react-scripts start",
+    "start:testing": "REACT_APP_ENVIRONMENT=testing react-scripts start",
     "build": "react-scripts build",
+    "build:dev": "REACT_APP_ENVIRONMENT=development react-scripts build",
+    "build:testing": "REACT_APP_ENVIRONMENT=testing react-scripts build",
+    "build:prod": "REACT_APP_ENVIRONMENT=production react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "test:coverage": "react-scripts test --coverage --passWithNoTests",
+    "test:ci": "react-scripts test --coverage --passWithNoTests --watchAll=false",
+    "eject": "react-scripts eject",
+    "deploy:testing": "npm run build:testing && echo 'Deploy to testing environment'",
+    "deploy:prod": "npm run build:prod && echo 'Deploy to production environment'"
   },
   "eslintConfig": {
     "extends": [

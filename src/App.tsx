@@ -25,6 +25,8 @@ import {
 import './index.css';
 import { useLotes, useLote, useDashboard, useCatalogos } from './hooks/useKimunPulse';
 import type { LoteCompleto, EstadoLote, TipoEvento } from './types/database';
+import EnvironmentBadge from './components/EnvironmentBadge';
+import { config } from './config/environments';
 
 // Componente del Logo KimunPulse
 const KimunPulseLogo: React.FC<{ size?: number; showText?: boolean }> = ({ 
@@ -1044,6 +1046,7 @@ ${lote.eventos.map(e => `${e.fecha} - ${e.tipo}: ${e.descripcion} (${e.responsab
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
+      <EnvironmentBadge />
       <Sidebar />
       
       <div className="flex-1 flex flex-col lg:ml-0">

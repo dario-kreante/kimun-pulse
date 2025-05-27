@@ -1,12 +1,36 @@
 import { createClient } from '@supabase/supabase-js'
 import type { Database } from '../types/database'
+import { config } from '../config/environments'
 
-// Configuración de Supabase
-const supabaseUrl = 'https://etmbspkgeofygcowsylp.supabase.co'
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV0bWJzcGtnZW9meWdjb3dzeWxwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgyODczODIsImV4cCI6MjA2Mzg2MzM4Mn0.WU0DMnbx8Ro_AsQ3Y6SqhswLYp-mioLIqkW9rxkbv3M'
+// Configuración de Supabase desde archivo de ambientes
+const supabaseUrl = config.supabase.url
+const supabaseAnonKey = config.supabase.anonKey
 
-// Crear cliente de Supabase con types
-export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey)
+// Crear cliente de Supabase con types y configuración del ambiente actual
+export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+  },
+  db: {
+    schema: 'public',
+  },
+  global: {
+    headers: {
+      'X-Environment': config.name,
+      'X-App-Version': config.app.version,
+    },
+  },
+})
+
+// Log de configuración en desarrollo
+if (config.app.debug) {
+  console.log('🔗 Supabase conectado:', {
+    url: supabaseUrl,
+    environment: config.name,
+    features: config.features,
+  })
+}
 
 // Servicios de datos específicos para KimunPulse
 export const lotesService = {
