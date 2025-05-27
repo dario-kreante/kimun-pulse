@@ -1,215 +1,305 @@
-# 🌱 KimunPulse MVP - El Pulso Vivo de Tu Campo
+# KimunPulse 🌱
 
-Aplicación MVP móvil enfocada específicamente en trazabilidad de lotes agrícolas. **KimunPulse** te conecta con el pulso vital de tu campo, proporcionando control total sobre la trazabilidad de tus cultivos.
+**El pulso vivo de tu campo** - Sistema de trazabilidad agrícola post-cosecha
 
-## 🎯 Funcionalidades MVP
+## Descripción
 
-### ✅ Módulos Implementados
-- **📊 Panel** - Dashboard con KPIs y resumen de lotes recientes
-- **📦 Lotes** - Gestión completa de lotes activos
-- **📑 Reportes** - Exportación de trazabilidad (próximamente)
-- **👤 Perfil** - Configuración de usuario (próximamente)
+KimunPulse es una aplicación web de trazabilidad agrícola que permite el seguimiento completo de lotes de producción desde la cosecha hasta el despacho, cumpliendo con las normativas del SAG (Servicio Agrícola y Ganadero) de Chile.
 
-### 🔧 Funciones Core
-- **Escaneo de códigos QR/GS1-128** - Acceso rápido desde header
-- **Listado de lotes activos** - ID, cultivo, estado, último evento + timestamp
-- **Vista detalle de lote** - Historial completo de eventos de trazabilidad
-- **Registro de nuevos eventos** - Tipos específicos del proceso post-cosecha
-- **Creación de lotes** - Formulario con datos SAG requeridos
-- **Generación de reportes** - Exportación de trazabilidad completa
+### Características Principales
 
-### 📦 Estados de Lotes (Ciclo Post-Cosecha)
-1. **🌱 En Cosecha** - Proceso de recolección en terreno
-2. **✅ Cosecha Completa** - Recolección finalizada, listo para transporte
-3. **🏭 En Packing** - En proceso en planta de packing
-4. **📦 Empacado** - Producto empacado y etiquetado
-5. **❄️ En Cámara** - Proceso de enfriado o almacenamiento refrigerado
-6. **🛒 Listo Despacho** - Producto listo para envío al cliente
-7. **🚛 Despachado** - Enviado al destino final
+- ✅ **Trazabilidad Completa**: Seguimiento de lotes desde cosecha hasta despacho
+- ✅ **Estados de Proceso**: En Cosecha → Cosecha Completa → En Packing → Empacado → En Cámara → Listo Despacho → Despachado
+- ✅ **Gestión de Eventos**: Registro de eventos de trazabilidad en tiempo real
+- ✅ **Dashboard en Tiempo Real**: Métricas y KPIs actualizados automáticamente
+- ✅ **Base de Datos Real**: Backend completo con Supabase
+- ✅ **Diseño Responsive**: Optimizado para dispositivos móviles y desktop
+- ✅ **Reportes**: Generación de reportes de trazabilidad por lote
 
-### 📋 Tipos de Eventos (Nomenclatura SAG)
-- **Inicio Cosecha** - Comienzo de recolección en cuartel
-- **Cosecha Completa** - Finalización de recolección
-- **Recepción Packing** - Ingreso a planta de procesamiento
-- **Selección** - Clasificación por calibre y calidad
-- **Empaque** - Proceso de empacado para comercialización
-- **Paletizado** - Armado de pallets para despacho
-- **Enfriado** - Proceso de hidrocooling o enfriado
-- **Control Calidad** - Verificación final antes de despacho
-- **Despacho** - Salida hacia cliente/distribuidor
+## Stack Tecnológico
 
-### 🗂️ Módulos Secundarios (Sidebar)
-- **📅 Eventos** - Historial completo de todos los eventos
-- **🔔 Notificaciones** - Alertas de lotes pendientes
-- **⚙️ Configuración** - Preferencias de usuario/empresa
-- **❓ Ayuda & Soporte** - FAQs y contacto
+### Frontend
+- **React 18** con TypeScript
+- **Vite** para desarrollo rápido
+- **Tailwind CSS** para estilos utility-first
+- **Lucide React** para iconografía
 
-## 🎨 Identidad Visual
+### Backend
+- **Supabase** como BaaS (Backend as a Service)
+- **PostgreSQL** como base de datos principal
+- **Row Level Security (RLS)** para seguridad
+- **Real-time subscriptions** para actualizaciones en vivo
 
-### Logo KimunPulse
-Diseño SVG personalizado que representa:
-- **Hoja estilizada** en blanco sobre gradiente verde
-- **Ondas de pulso** en Lima Suave que simbolizan la vitalidad
-- **Vena central** que conecta con la naturaleza
-- **Gradiente cultivo** como base sólida
+### Herramientas de Desarrollo
+- **TypeScript** para type safety
+- **ESLint** para linting
+- **Git** para control de versiones
 
-### Colores
-- **Primary:** Verde Cultivo #16A34A
-- **Secondary:** Lima Suave #A3E635  
-- **Neutral:** Grises suaves
-- **Degradados:** Verde cultivo hacia tonos más profundos
+## Arquitectura de Datos
 
-### Tipografía
-- **Fuente:** Inter (Google Fonts)
-- **Mobile First:** 390×844pt (iPhone 14)
+### Esquema de Base de Datos
 
-### Flujo Principal
-```
-Escaneo QR → Lote → Evento → Reporte
+```sql
+-- Tipos enum
+CREATE TYPE estado_lote AS ENUM (
+  'En Cosecha', 'Cosecha Completa', 'En Packing', 
+  'Empacado', 'En Cámara', 'Listo Despacho', 'Despachado'
+);
+
+CREATE TYPE tipo_evento AS ENUM (
+  'Inicio Cosecha', 'Cosecha Completa', 'Recepción Packing',
+  'Selección', 'Empaque', 'Paletizado', 'Enfriado', 
+  'Control Calidad', 'Despacho'
+);
+
+-- Tablas principales
+- cultivos (Arándanos, Cerezas, Manzanas)
+- variedades (Duke, Sweet Heart, Golden Delicious, etc.)
+- cuarteles (Cuartel 1, 2, 3)
+- usuarios (supervisores, operadores, jefes)
+- lotes (lotes de producción con trazabilidad)
+- eventos_trazabilidad (historial completo de eventos)
 ```
 
-## 🏗️ Arquitectura de Navegación
+### Vistas y Funciones
+- `v_lotes_completos`: Vista con información completa de lotes
+- `v_dashboard_metricas`: Métricas resumidas para dashboard
+- `v_eventos_recientes`: Eventos de los últimos 30 días
+- `obtener_metricas_dashboard()`: Función para métricas en tiempo real
+- `generar_reporte_lote()`: Función para reportes completos
 
-### 📱 Header (Barra Superior)
-Acciones críticas siempre disponibles:
-- **☰ Menú hamburguesa** → Abre sidebar
-- **🔍 Escanear** → Cámara QR/GS1-128  
-- **➕ Nuevo lote** → Formulario de alta
+## Instalación y Configuración
 
-### 🔽 Navbar (Barra Inferior)
-4 módulos principales de uso frecuente:
-- **🏠 Panel** → Dashboard con KPIs
-- **📦 Lotes** → Gestión de lotes
-- **📑 Reportes** → PDFs y CSVs
-- **👤 Perfil** → Usuario y empresa
+### Prerrequisitos
+- Node.js 18+
+- npm o yarn
+- Cuenta de Supabase (ya configurada)
 
-### 📋 Sidebar (Menú Lateral)
-Módulos secundarios y configuraciones:
-- **📅 Eventos** → Historial completo
-- **🔔 Notificaciones** → Alertas
-- **⚙️ Configuración** → Preferencias  
-- **❓ Ayuda** → Soporte y FAQs
+### Instalación
 
-## 🏗️ Arquitectura Técnica
-
-### Stack
-- **React 18** + TypeScript
-- **Tailwind CSS** v3.4.0
-- **Lucide React** iconos
-- **Single Component Architecture** con componentes internos
-
-### 📋 Concepto: ¿Qué es un Lote en KimunPulse?
-
-**KimunPulse** utiliza la terminología oficial chilena según normativas SAG:
-
-#### ✅ Lote de Producción
-- **Definición:** Batch de fruta que comparte mismo origen, fecha y variedad
-- **Ámbito:** Desde cosecha hasta despacho
-- **Normativa:** Manual FDF y reglamentos SAG
-- **Ejemplo:** `LP-2025-CHIL-001` - Arándanos Duke del Cuartel 3
-
-#### 🔄 Diferencia con Cuarteles
-| Concepto | Uso en KimunPulse | Descripción |
-|----------|-------------------|-------------|
-| **Lote de Producción** | ✅ **Unidad principal** | Batch rastreado en trazabilidad post-cosecha |
-| **Cuartel/Bloque** | 📍 **Campo de origen** | Subdivisión del predio donde se cosechó el lote |
-
-#### 🚀 Escalabilidad Futura
-- **Actual:** Trazabilidad de lotes (cosecha → despacho)
-- **Futuro:** Gestión de cuarteles (labores agronómicas in-field)
-
-### Estructura de Datos
-```typescript
-interface LoteTraceabilidad {
-  id: string; // LP-2025-CHIL-XXX
-  cultivo: 'Arándanos' | 'Cerezas' | 'Manzanas' | 'Uvas';
-  variedad: string; // Duke, Bluecrop, Sweet Heart, etc.
-  estado: 'Activo' | 'Cosechado' | 'Empacado' | 'Despachado';
-  ultimoEvento: string;
-  fechaUltimoEvento: string;
-  area: number; // Hectáreas del lote
-  cuartelOrigen: string; // Cuartel/bloque donde se cosechó
-  eventos: EventoTrazabilidad[];
-}
-
-interface EventoTrazabilidad {
-  tipo: 'Siembra' | 'Riego' | 'Fertilización' | 'Cosecha' | 'Empaque' | 'Despacho';
-  fecha: string;
-  descripcion: string;
-  responsable: string;
-  cuartel?: string; // Cuartel donde se ejecutó la labor
-}
+1. **Clonar el repositorio**
+```bash
+git clone https://github.com/dario-kreante/kimun-pulse.git
+cd kimun-pulse
 ```
 
-## 🚀 Instalación y Ejecución
+2. **Instalar dependencias**
+```bash
+npm install
+```
+
+3. **Configuración de entorno**
+El proyecto ya incluye la configuración de Supabase integrada.
+
+### Configuración de Supabase
+
+#### Proyecto Activo
+- **Proyecto ID**: `kimun-pulse`
+- **URL**: `https://etmbspkgeofygcowsylp.supabase.co`
+- **Región**: `us-west-1`
+- **Estado**: `ACTIVE_HEALTHY`
+
+#### Datos de Prueba Incluidos
+- **3 Lotes de producción** con trazabilidad completa
+- **15 Eventos** de trazabilidad distribuidos
+- **3 Cultivos**: Arándanos, Cerezas, Manzanas
+- **6 Variedades**: Duke, Bluecrop, Sweet Heart, etc.
+- **3 Cuarteles**: Cuartel 1, 2, 3
+- **9 Usuarios**: Supervisores, operadores, jefes de área
+
+### Ejecutar la Aplicación
 
 ```bash
-# Instalar dependencias
-npm install
+# Desarrollo
+npm run dev
 
-# Ejecutar en desarrollo
-npm start
-
-# Compilar para producción
+# Build de producción
 npm run build
+
+# Preview de producción
+npm run preview
 ```
 
-## 📊 Datos de Demostración
+La aplicación estará disponible en `http://localhost:5173`
 
-### Lotes Chilenos Incluidos
-- **LP-2025-CHIL-001** - Arándanos Duke (2.5 ha) - **En Packing**
-- **LP-2025-CHIL-002** - Cerezas Sweet Heart (3.2 ha) - **En Cámara**  
-- **LP-2025-CHIL-003** - Manzanas Golden Delicious (4.1 ha) - **Listo Despacho**
+## Estructura del Proyecto
 
-### Estados Demostrados
-- **En Cosecha** → Recolección activa en terreno
-- **En Packing** → Procesamiento en planta
-- **En Cámara** → Enfriado hidrocooling completado
-- **Listo Despacho** → Control calidad final aprobado
+```
+src/
+├── components/           # Componentes React (eliminados - UI integrada)
+├── hooks/               # Custom hooks para manejo de datos
+│   └── useKimunPulse.ts # Hooks principales para Supabase
+├── lib/                 # Configuración y servicios
+│   └── supabase.ts      # Cliente y servicios de Supabase
+├── types/               # Definiciones de tipos TypeScript
+│   └── database.ts      # Tipos generados desde Supabase
+├── App.tsx              # Componente principal
+├── index.css            # Estilos base y Tailwind
+└── main.tsx             # Entry point
+```
 
-### Eventos Simulados del Proceso Real
-- **Inicio/Cosecha Completa** - Labores en terreno
-- **Recepción Packing** - Ingreso a planta con controles temperatura/brix
-- **Selección** - Clasificación por calibre (Cat. I, Cat. II)
-- **Empaque/Paletizado** - Proceso de empacado estándar export
-- **Enfriado** - Hidrocooling con control temperatura pulpa
-- **Control Calidad** - Verificación final de temperatura, etiquetado, trazabilidad
+## Funcionalidades Principales
 
-### KPIs del Panel
-- **Lotes Activos:** Contador dinámico de lotes en proceso
-- **Eventos Hoy:** Simulado (12 eventos de trazabilidad)
-- **Últimos Lotes:** Top 3 más recientes con estados actualizados
+### 1. Dashboard de Monitoreo
+- **Métricas en tiempo real**: Total lotes, área, eventos del día
+- **Estados de lotes**: Distribución por estado de proceso
+- **Eventos recientes**: Últimas 5 actividades de trazabilidad
+- **Auto-refresh**: Actualización automática cada 30 segundos
 
-## 🎯 Filosofía MVP
+### 2. Gestión de Lotes
+- **Lista completa** de lotes con filtros y búsqueda
+- **Vista de detalle** con historial completo de eventos
+- **Estados visuales** con iconografía intuitiva
+- **Información técnica**: Cultivo, variedad, área, cuartel
 
-**KimunPulse** está diseñado para sentir el pulso vital de tu campo. Nuestro enfoque es validar rápidamente la hipótesis core de trazabilidad básica antes de agregar features complejas.
+### 3. Trazabilidad de Eventos
+- **9 Tipos de eventos** según flujo post-cosecha
+- **Registro en tiempo real** con responsable y descripción
+- **Historial cronológico** completo por lote
+- **Datos adicionales** en formato JSON para flexibilidad
 
-### Principios de Diseño
-- **Acceso rápido** a funciones críticas desde el header
-- **Navegación intuitiva** con navbar de 4 módulos principales
-- **Organización clara** con sidebar para funciones secundarias
-- **Flujo optimizado:** escanear → rastrear → reportar
+### 4. Reportes de Trazabilidad
+- **Exportación** de reportes por lote
+- **Formato de texto** con información completa
+- **Historial de eventos** incluido
+- **Información técnica** y de proceso
 
-## 📝 Siguientes Pasos (Post-MVP)
+### 5. Interfaz Responsive
+- **Diseño mobile-first** con navegación adaptativa
+- **Sidebar** para desktop con navegación completa
+- **Bottom navigation** para móviles
+- **Componentes optimizados** para touch y mouse
 
-### Corto Plazo
-1. **Completar módulos** de Reportes y Perfil
-2. **Implementar módulos** del sidebar (Eventos, Notificaciones, etc.)
-3. **Integración con escáner** real de códigos QR/GS1-128
+## Flujo de Trazabilidad
 
-### Mediano Plazo
-4. **Backend** para persistencia de datos
-5. **Autenticación** y roles de usuario  
-6. **Notificaciones push** para alertas
+### Estados de Lote
+1. **En Cosecha** 🌱 - Proceso de cosecha en campo
+2. **Cosecha Completa** ✅ - Cosecha finalizada
+3. **En Packing** 🏭 - Recepción en planta de packing
+4. **Empacado** 📦 - Producto empacado y etiquetado
+5. **En Cámara** ❄️ - Almacenamiento en frío
+6. **Listo Despacho** 🚚 - Preparado para envío
+7. **Despachado** ✈️ - Enviado a destino
 
-### Largo Plazo
-7. **Integración ERP** con sistemas existentes
-8. **Features avanzadas** según feedback de usuarios
-9. **Escalabilidad** a múltiples fundos y empresas
+### Tipos de Eventos
+- **Inicio Cosecha**: Comienzo del proceso de cosecha
+- **Cosecha Completa**: Finalización de cosecha
+- **Recepción Packing**: Llegada a planta de procesamiento
+- **Selección**: Clasificación y selección de producto
+- **Empaque**: Proceso de empaque y etiquetado
+- **Paletizado**: Organización en pallets
+- **Enfriado**: Proceso de enfriamiento
+- **Control Calidad**: Verificación de estándares
+- **Despacho**: Envío a destino final
+
+## Seguridad y Cumplimiento
+
+### Row Level Security (RLS)
+- **Políticas aplicadas** en todas las tablas
+- **Acceso controlado** por usuario autenticado
+- **Auditoría** de todas las operaciones
+
+### Normativas SAG
+- **Trazabilidad completa** según requerimientos
+- **Registro cronológico** de todos los eventos
+- **Identificación única** de lotes de producción
+- **Responsables identificados** en cada proceso
+
+## API y Servicios
+
+### Servicios Implementados
+
+```typescript
+// Servicio de lotes
+lotesService.obtenerLotesCompletos()
+lotesService.obtenerLotePorId(id)
+lotesService.crearLote(lote)
+
+// Servicio de eventos
+eventosService.obtenerHistorialLote(loteId)
+eventosService.agregarEvento(evento)
+eventosService.obtenerEventosRecientes()
+
+// Servicio de dashboard
+dashboardService.obtenerMetricas()
+dashboardService.generarReporteLote(loteId)
+
+// Servicio de catálogos
+catalogosService.obtenerCultivos()
+catalogosService.obtenerVariedades(cultivoId)
+catalogosService.obtenerCuarteles()
+catalogosService.obtenerUsuarios()
+```
+
+### Hooks Reactivos
+
+```typescript
+// Hook para lotes
+const { lotes, loading, error, refrescar } = useLotes()
+
+// Hook para lote específico
+const { lote, eventos, agregarEvento } = useLote(loteId)
+
+// Hook para dashboard
+const { metricas, eventosRecientes } = useDashboard()
+
+// Hook para catálogos
+const { cultivos, variedades, cuarteles } = useCatalogos()
+```
+
+## Próximas Funcionalidades
+
+### En Desarrollo
+- [ ] **Autenticación de usuarios** completa
+- [ ] **Roles y permisos** granulares
+- [ ] **Notificaciones en tiempo real**
+- [ ] **Reportes avanzados** en PDF
+- [ ] **API para integraciones** externas
+
+### Planificadas
+- [ ] **App móvil nativa**
+- [ ] **Integración con sensores IoT**
+- [ ] **Analytics avanzados**
+- [ ] **Exportación a Excel**
+- [ ] **Códigos QR automáticos**
+
+## Contribución
+
+### Configuración de Desarrollo
+1. Fork del repositorio
+2. Crear rama feature: `git checkout -b feature/nueva-funcionalidad`
+3. Commit cambios: `git commit -am 'Agregar nueva funcionalidad'`
+4. Push a la rama: `git push origin feature/nueva-funcionalidad`
+5. Crear Pull Request
+
+### Estándares de Código
+- **TypeScript**: Código completamente tipado
+- **ESLint**: Linting configurado y obligatorio
+- **Prettier**: Formateo automático de código
+- **Conventional Commits**: Formato estándar de commits
+
+## Licencia
+
+MIT License - ver archivo [LICENSE](LICENSE) para detalles.
+
+## Contacto
+
+- **Desarrollador**: Dario @ Kreante
+- **Email**: dario@kreante.co
+- **GitHub**: [@dario-kreante](https://github.com/dario-kreante)
 
 ---
 
-**Versión:** MVP 1.0  
-**Marca:** KimunPulse  
-**Eslogan:** El pulso vivo de tu campo  
-**Estado:** ✅ Listo para validación de usuarios
+**KimunPulse v1.0** - Trazabilidad agrícola profesional para la industria frutícola chilena 🇨🇱
+
+## Estado del Proyecto
+
+✅ **Backend completo** con Supabase  
+✅ **Frontend funcional** con datos reales  
+✅ **Trazabilidad implementada** según SAG  
+✅ **Dashboard en tiempo real**  
+✅ **Responsive design**  
+🔄 **Autenticación** (en desarrollo)  
+🔄 **Reportes PDF** (planificado)  
+
+**Última actualización**: Enero 2025
