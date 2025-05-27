@@ -26,7 +26,6 @@ import './index.css';
 import { useLotes, useLote, useDashboard, useCatalogos } from './hooks/useKimunPulse';
 import type { LoteCompleto, EstadoLote, TipoEvento } from './types/database';
 import EnvironmentBadge from './components/EnvironmentBadge';
-import { config } from './config/environments';
 
 // Componente del Logo KimunPulse
 const KimunPulseLogo: React.FC<{ size?: number; showText?: boolean }> = ({ 
@@ -134,6 +133,7 @@ function App() {
   const { lotes: lotesReales, loading: lotesLoading, error: lotesError, refrescar: refrescarLotes } = useLotes();
   const { lote, eventos, loading: loteLoading, agregarEvento } = useLote(loteSeleccionadoId);
   const { metricas, eventosRecientes, loading: dashboardLoading } = useDashboard();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { cultivos, variedades, cuarteles, usuarios, cargarVariedadesPorCultivo } = useCatalogos();
 
   // Transformar datos de Supabase al formato esperado por la UI
