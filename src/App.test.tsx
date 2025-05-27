@@ -3,10 +3,10 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import App from './App';
 
-test('renders KimunPulse application', () => {
+test('renders KimunPulse welcome message', () => {
   render(<App />);
-  const appTitle = screen.getByText(/KimunPulse/i);
-  expect(appTitle).toBeInTheDocument();
+  const welcomeMessage = screen.getByText(/¡Bienvenido a KimunPulse!/i);
+  expect(welcomeMessage).toBeInTheDocument();
 });
 
 test('renders environment badge in development', () => {
