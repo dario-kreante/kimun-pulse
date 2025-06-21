@@ -14,7 +14,8 @@ if (!supabaseUrl || !supabaseAnonKey) {
 // Cuando se accede desde ngrok, usamos directamente Supabase ya que ngrok maneja CORS.
 const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 const isLocalDev = process.env.NODE_ENV === 'development' && isLocalhost;
-const finalSupabaseUrl = isLocalDev ? 'http://localhost:3001' : supabaseUrl;
+// Temporalmente deshabilitamos el proxy para usar directamente Supabase
+const finalSupabaseUrl = supabaseUrl; // isLocalDev ? 'http://localhost:3001' : supabaseUrl;
 
 // Crear cliente de Supabase con types y configuración del ambiente actual
 export const supabase = createClient<Database>(finalSupabaseUrl, supabaseAnonKey, {
