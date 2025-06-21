@@ -69,6 +69,50 @@ export type Database = {
         }
         Relationships: []
       }
+      eventos_pallet: {
+        Row: {
+          id: string
+          codigo_pallet: string
+          tipo: Database["public"]["Enums"]["tipo_evento"]
+          descripcion: string
+          responsable_nombre: string
+          datos_adicionales: Json | null
+          fecha: string
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          codigo_pallet: string
+          tipo: Database["public"]["Enums"]["tipo_evento"]
+          descripcion: string
+          responsable_nombre: string
+          datos_adicionales?: Json | null
+          fecha?: string
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          codigo_pallet?: string
+          tipo?: Database["public"]["Enums"]["tipo_evento"]
+          descripcion?: string
+          responsable_nombre?: string
+          datos_adicionales?: Json | null
+          fecha?: string
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "eventos_pallet_codigo_pallet_fkey"
+            columns: ["codigo_pallet"]
+            isOneToOne: false
+            referencedRelation: "pallets"
+            referencedColumns: ["codigo_pallet"]
+          }
+        ]
+      }
       eventos_trazabilidad: {
         Row: {
           created_at: string | null
@@ -109,6 +153,13 @@ export type Database = {
             columns: ["lote_id"]
             isOneToOne: false
             referencedRelation: "lotes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "eventos_trazabilidad_lote_id_fkey"
+            columns: ["lote_id"]
+            isOneToOne: false
+            referencedRelation: "v_lotes_completos"
             referencedColumns: ["id"]
           },
           {
@@ -172,6 +223,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "lotes_cuartel_id_fkey"
+            columns: ["cuartel_id"]
+            isOneToOne: false
+            referencedRelation: "v_productividad_cuarteles"
+            referencedColumns: ["cuartel_id"]
+          },
+          {
             foreignKeyName: "lotes_cultivo_id_fkey"
             columns: ["cultivo_id"]
             isOneToOne: false
@@ -186,6 +244,113 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      pallet_lotes: {
+        Row: {
+          cantidad_cajas_lote: number
+          codigo_pallet: string | null
+          fecha_agregado: string | null
+          id: string
+          lote_id: string | null
+          peso_lote_kg: number
+          posicion_en_pallet: number | null
+        }
+        Insert: {
+          cantidad_cajas_lote: number
+          codigo_pallet?: string | null
+          fecha_agregado?: string | null
+          id?: string
+          lote_id?: string | null
+          peso_lote_kg: number
+          posicion_en_pallet?: number | null
+        }
+        Update: {
+          cantidad_cajas_lote?: number
+          codigo_pallet?: string | null
+          fecha_agregado?: string | null
+          id?: string
+          lote_id?: string | null
+          peso_lote_kg?: number
+          posicion_en_pallet?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pallet_lotes_codigo_pallet_fkey"
+            columns: ["codigo_pallet"]
+            isOneToOne: false
+            referencedRelation: "pallets"
+            referencedColumns: ["codigo_pallet"]
+          },
+          {
+            foreignKeyName: "pallet_lotes_codigo_pallet_fkey"
+            columns: ["codigo_pallet"]
+            isOneToOne: false
+            referencedRelation: "v_pallets_completos"
+            referencedColumns: ["codigo_pallet"]
+          },
+          {
+            foreignKeyName: "pallet_lotes_lote_id_fkey"
+            columns: ["lote_id"]
+            isOneToOne: false
+            referencedRelation: "lotes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pallet_lotes_lote_id_fkey"
+            columns: ["lote_id"]
+            isOneToOne: false
+            referencedRelation: "v_lotes_completos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pallets: {
+        Row: {
+          activo: boolean | null
+          cantidad_cajas_total: number | null
+          codigo_pallet: string
+          created_at: string | null
+          destino_inicial: string | null
+          estado: Database["public"]["Enums"]["estado_pallet"] | null
+          fecha_creacion: string | null
+          observaciones: string | null
+          peso_total_kg: number | null
+          temperatura_objetivo: number | null
+          tipo_pallet: string
+          ubicacion_actual: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          activo?: boolean | null
+          cantidad_cajas_total?: number | null
+          codigo_pallet: string
+          created_at?: string | null
+          destino_inicial?: string | null
+          estado?: Database["public"]["Enums"]["estado_pallet"] | null
+          fecha_creacion?: string | null
+          observaciones?: string | null
+          peso_total_kg?: number | null
+          temperatura_objetivo?: number | null
+          tipo_pallet?: string
+          ubicacion_actual?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          activo?: boolean | null
+          cantidad_cajas_total?: number | null
+          codigo_pallet?: string
+          created_at?: string | null
+          destino_inicial?: string | null
+          estado?: Database["public"]["Enums"]["estado_pallet"] | null
+          fecha_creacion?: string | null
+          observaciones?: string | null
+          peso_total_kg?: number | null
+          temperatura_objetivo?: number | null
+          tipo_pallet?: string
+          ubicacion_actual?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       usuarios: {
         Row: {
@@ -288,7 +453,29 @@ export type Database = {
           tipo: Database["public"]["Enums"]["tipo_evento"] | null
           variedad: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "eventos_trazabilidad_lote_id_fkey"
+            columns: ["lote_id"]
+            isOneToOne: false
+            referencedRelation: "lotes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "eventos_trazabilidad_lote_id_fkey"
+            columns: ["lote_id"]
+            isOneToOne: false
+            referencedRelation: "v_lotes_completos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lotes_cultivo_id_fkey"
+            columns: ["cultivo_id"]
+            isOneToOne: false
+            referencedRelation: "cultivos"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       v_lotes_completos: {
         Row: {
@@ -310,8 +497,77 @@ export type Database = {
         }
         Relationships: []
       }
+      v_pallets_completos: {
+        Row: {
+          activo: boolean | null
+          cajas_calculadas: number | null
+          cantidad_cajas_total: number | null
+          codigo_pallet: string | null
+          created_at: string | null
+          cultivos: string | null
+          destino_inicial: string | null
+          estado: Database["public"]["Enums"]["estado_pallet"] | null
+          fecha_creacion: string | null
+          lotes_asociados: number | null
+          lotes_ids: string[] | null
+          observaciones: string | null
+          peso_calculado: number | null
+          peso_total_kg: number | null
+          temperatura_objetivo: number | null
+          tipo_pallet: string | null
+          ubicacion_actual: string | null
+          updated_at: string | null
+          variedades: string | null
+        }
+        Relationships: []
+      }
+      v_productividad_cuarteles: {
+        Row: {
+          area_total: number | null
+          cuartel: string | null
+          cuartel_id: string | null
+          cultivo_principal: string | null
+          lotes_completados: number | null
+          porcentaje_completados: number | null
+          total_lotes: number | null
+          ubicacion: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
+      agregar_evento_validado: {
+        Args: { 
+          lote_id_param: string
+          tipo_param: Database["public"]["Enums"]["tipo_evento"]
+          descripcion_param: string
+          responsable_param?: string
+          datos_adicionales_param?: Json
+        }
+        Returns: Json
+      }
+      agregar_lote_a_pallet: {
+        Args: {
+          p_codigo_pallet: string
+          p_lote_id: string
+          p_cantidad_cajas: number
+          p_peso_kg: number
+          p_posicion?: number
+        }
+        Returns: boolean
+      }
+      crear_pallet: {
+        Args: {
+          p_tipo_pallet?: string
+          p_destino_inicial?: string
+          p_observaciones?: string
+        }
+        Returns: string
+      }
+      eliminar_lote_logico: {
+        Args: { lote_id_param: string; motivo?: string }
+        Returns: boolean
+      }
       generar_reporte_lote: {
         Args: { lote_id_param: string }
         Returns: {
@@ -328,6 +584,14 @@ export type Database = {
           dias_en_proceso: number
           historial_eventos: Json
         }[]
+      }
+      generar_siguiente_codigo_pallet: {
+        Args: { año_param?: number }
+        Returns: string
+      }
+      obtener_eventos_validos: {
+        Args: { lote_id_param: string }
+        Returns: Json
       }
       obtener_historial_lote: {
         Args: { lote_id_param: string }
@@ -351,6 +615,25 @@ export type Database = {
           cultivos_activos: Json
         }[]
       }
+      obtener_progreso_lote: {
+        Args: { lote_id_param: string }
+        Returns: Json
+      }
+      obtener_trazabilidad_lote: {
+        Args: { p_lote_id: string }
+        Returns: Json
+      }
+      restaurar_lote: {
+        Args: { lote_id_param: string }
+        Returns: boolean
+      }
+      validar_secuencia_evento: {
+        Args: { 
+          lote_id_param: string
+          nuevo_tipo_evento: Database["public"]["Enums"]["tipo_evento"]
+        }
+        Returns: Json
+      }
     }
     Enums: {
       estado_lote:
@@ -361,6 +644,14 @@ export type Database = {
         | "En Cámara"
         | "Listo Despacho"
         | "Despachado"
+        | "Eliminado"
+      estado_pallet:
+        | "en_construccion"
+        | "completo"
+        | "en_camara"
+        | "en_transito"
+        | "entregado"
+        | "devuelto"
       tipo_evento:
         | "Inicio Cosecha"
         | "Cosecha Completa"
@@ -468,10 +759,63 @@ export type Enums<
     ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
     : never
 
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof DefaultSchema["CompositeTypes"]
+    | { schema: keyof Database },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof Database
+  }
+    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never
+
+export const Constants = {
+  public: {
+    Enums: {
+      estado_lote: [
+        "En Cosecha",
+        "Cosecha Completa",
+        "En Packing",
+        "Empacado",
+        "En Cámara",
+        "Listo Despacho",
+        "Despachado",
+        "Eliminado",
+      ],
+      estado_pallet: [
+        "en_construccion",
+        "completo",
+        "en_camara",
+        "en_transito",
+        "entregado",
+        "devuelto",
+      ],
+      tipo_evento: [
+        "Inicio Cosecha",
+        "Cosecha Completa",
+        "Recepción Packing",
+        "Selección",
+        "Empaque",
+        "Paletizado",
+        "Enfriado",
+        "Control Calidad",
+        "Despacho",
+      ],
+    },
+  },
+} as const
+
 // Tipos específicos para KimunPulse
 export type EstadoLote = Database["public"]["Enums"]["estado_lote"]
 export type TipoEvento = Database["public"]["Enums"]["tipo_evento"]
+export type EstadoPallet = Database["public"]["Enums"]["estado_pallet"]
 export type LoteCompleto = Tables<"v_lotes_completos">
+export type PalletCompleto = Tables<"v_pallets_completos">
 export type DashboardMetricas = Tables<"v_dashboard_metricas">
 export type EventoReciente = Tables<"v_eventos_recientes">
 

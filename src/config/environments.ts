@@ -112,7 +112,7 @@ const getCurrentEnvironment = (): Environment => {
   // Detecta por URL o variable de entorno
   const hostname = window.location.hostname;
   
-  if (hostname === 'localhost' || hostname === '127.0.0.1') {
+  if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname.includes('ngrok')) {
     return 'development';
   }
   

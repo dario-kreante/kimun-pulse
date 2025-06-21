@@ -303,3 +303,57 @@ MIT License - ver archivo [LICENSE](LICENSE) para detalles.
 🔄 **Reportes PDF** (planificado)  
 
 **Última actualización**: Enero 2025
+
+## Diagrama de Entidades (Schema)
+
+```mermaid
+graph TD;
+  Cultivos["cultivos"] -->|1:N| Variedades["variedades"]
+  Cultivos -->|1:N| Lotes["lotes"]
+  Variedades -->|1:N| Lotes
+  Cuarteles["cuarteles"] -->|1:N| Lotes
+  Usuarios["usuarios"] -->|1:N| Eventos["eventos_trazabilidad"]
+  Lotes -->|1:N| Eventos
+
+  Eventos -->|N:1| Lotes
+  Eventos -->|N:1| Usuarios
+
+  subgraph Enums
+    EstadoLote["estado_lote"]
+    TipoEvento["tipo_evento"]
+  end
+  Lotes -- Estado --> EstadoLote
+  Eventos -- Tipo --> TipoEvento
+```
+
+## Testing y Cobertura
+
+El proyecto requiere mínimo 80% de cobertura en lógica de negocio, endpoints y componentes críticos. Utiliza Jest y React Testing Library.
+
+```bash
+# Ejecutar todos los tests
+npm test
+
+# Ejecutar tests con cobertura
+npm run test:coverage
+```
+
+- Los tests unitarios deben cubrir servicios, hooks y utilidades.
+- Los tests de integración validan flujos completos (ej: creación de lote y eventos).
+- Los tests e2e (end-to-end) se implementarán para los flujos críticos.
+
+## Manejo de Errores y Seguridad
+
+- **Row Level Security (RLS):** Todas las tablas tienen políticas activas. Solo usuarios autenticados pueden operar sobre sus datos.
+- **Validaciones:** Se valida input en frontend y backend. No se permite SQL injection ni datos malformados.
+- **Auditoría:** Todas las operaciones quedan registradas.
+- **Variables sensibles:** Nunca se hardcodean claves ni tokens, todo va en `.env`.
+- **Manejo de errores:** El backend responde con objetos de error consistentes. El frontend muestra mensajes claros y estados vacíos o de error amigables.
+
+## Documentación Avanzada
+
+- [docs/FORMATO_CODIGOS_LOTES.md](./docs/FORMATO_CODIGOS_LOTES.md): **Formato oficial de códigos** LP-YYYY-CHIL-NNN
+- [docs/API.md](./docs/API.md): Documentación de servicios y endpoints
+- [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md): Instrucciones de despliegue
+- [docs/CONTRIBUTING.md](./docs/CONTRIBUTING.md): Guía de contribución
+- [docs/CHANGELOG.md](./docs/CHANGELOG.md): Historial de cambios
